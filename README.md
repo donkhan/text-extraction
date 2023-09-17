@@ -10,7 +10,7 @@ This lambda function can be easily extended to listen for s3 bucket create/updat
 
 The sample jpg files are already stored in s3 bucket named kamilxbucket. Right now it is hardcoded in the code to be read from. 
 
-For Testing you can execute curl -XGET "https://tvzdzzak83.execute-api.us-east-1.amazonaws.com/dev/get-text?file-name=s1.jpg" and see the json output in terse. You can use https://jsonformatter.org/#google_vignette to format the json.  You can note that file-name is a parameter. As of now you can pass either s1.jpg or s3.jpg and input parameter and get different outputs.
+For Testing you can execute curl -XGET "https://tvzdzzak83.execute-api.us-east-1.amazonaws.com/dev/get-text?file-name=s1.jpg" and see the json output in terse. You can use https://jsonformatter.org/#google_vignette to format the json.  You can note that file-name is a parameter. As of now you can pass either s1.jpg or s3.jpg as input parameter and get different outputs.
 
 You can see the input and corresponding text extract.
 
