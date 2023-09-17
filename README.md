@@ -1,6 +1,6 @@
 # text-extraction
 
-This repository is a demonstration of lambda function which AWS-textract to extract the images which is present in a known s3 repository.
+This repository is a demonstration of lambda function which uses AWS-textract to extract the text content from images which are present in a known s3 repository and create json responses.
 
 Sample input images are present in input folder and corresponding json output is present in the output folder
 
