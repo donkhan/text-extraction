@@ -16,6 +16,8 @@ You can see the input and corresponding text extract.
 
 ![alt text](https://github.com/donkhan/text-extraction/blob/main/input/s1.jpg?raw=true)
 
+
+```json
 [
   {
     "question_no": "1",
@@ -58,5 +60,5 @@ You can see the input and corresponding text extract.
     "answer": "Yes "
   }
 ]
-
+```
 
