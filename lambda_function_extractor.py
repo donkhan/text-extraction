@@ -13,6 +13,7 @@ app = APIGatewayRestResolver()
 tracer = Tracer()
 logger = Logger()
 metrics = Metrics(namespace="PowertoolsSample")
+
 @app.get("/get-text")
 @tracer.capture_method
 def get_text():
@@ -20,8 +21,10 @@ def get_text():
     metrics.add_metric(name="TextConversionInvocations", unit=MetricUnit.Count, value=1)
     d = process_text_detection(f_name)
     return d
+
 def get_triplet(block):
     return str(block.get('BlockType')), str(block.get('TextType')), str(block.get('Text'))
+
 def get_block_of_content(blocks, i, text_type):
     q = ""
     i = i + 1
@@ -31,10 +34,13 @@ def get_block_of_content(blocks, i, text_type):
         i = i + 1
         t = get_triplet(blocks[i])
     return q, i-1
+
 def get_printed_question(blocks, i):
     return get_block_of_content(blocks, i, "PRINTED")
+
 def get_handwritten_answer(blocks, i):
     return get_block_of_content(blocks, i, "HANDWRITING")
+
 def process_text_detection(f_name):
     blocks = boto3.client('textract', region_name='us-east-1').detect_document_text(
         Document={'S3Object': {'Bucket': "kamilxbucket", 'Name': f_name}})['Blocks']
@@ -51,6 +57,7 @@ def process_text_detection(f_name):
                     "question_no" : q_no,"question" : q,"answer" : a })
         i = i + 1
     return data_array
+
 @logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
 @tracer.capture_lambda_handler
 @metrics.log_metrics(capture_cold_start_metric=True)
