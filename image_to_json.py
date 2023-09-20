@@ -28,10 +28,9 @@ def get_handwritten_answer(blocks, i):
     return get_block_of_content(blocks, i, "HANDWRITING")
 
 
-def process_text_detection(client, bucket, document):
-    response = client.detect_document_text(
-        Document={'S3Object': {'Bucket': bucket, 'Name': document}})
-    blocks = response['Blocks']
+def process_text_detection(f_name):
+    blocks = boto3.client('textract', region_name='us-east-1').detect_document_text(
+        Document={'S3Object': {'Bucket': "kamilxbucket", 'Name': f_name}})['Blocks']
     i = 0
     data_array = list()
     q_type = "number"
@@ -48,7 +47,7 @@ def process_text_detection(client, bucket, document):
                 data_array.append({
                     "question_no": q_no, "question": q, "answer": a
                 })
-                q_type = "hyper"
+                q_type = "hyphen"
                 continue
 
             if q_type == "number" and b[2][0:len(b[2])-1].isdigit():
@@ -65,9 +64,10 @@ def process_text_detection(client, bucket, document):
 
 
 def main():
-    session = boto3.Session(profile_name='awskamil')
-    client = session.client('textract', region_name='us-east-1')
-    process_text_detection(client, 'kamilxbucket', sys.argv[1])
+    #session = boto3.Session(profile_name='awskamil')
+    #client = session.client('textract', region_name='us-east-1')
+    #process_text_detection(client, 'kamilxbucket', sys.argv[1])
+    process_text_detection(sys.argv[1])
 
 
 if __name__ == "__main__":
