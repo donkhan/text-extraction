@@ -3,23 +3,19 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools import Tracer
-from aws_lambda_powertools import Metrics
-from aws_lambda_powertools.metrics import MetricUnit
-from aws_lambda_powertools.utilities import parameters
+
 import boto3
 import io
 import json
+
 app = APIGatewayRestResolver()
 tracer = Tracer()
 logger = Logger()
-metrics = Metrics(namespace="PowertoolsSample")
 
 @app.get("/get-text")
 @tracer.capture_method
 def get_text():
-    f_name = app.current_event["queryStringParameters"]['file-name']
-    metrics.add_metric(name="TextConversionInvocations", unit=MetricUnit.Count, value=1)
-    d = process_text_detection(f_name)
+    d = process_text_detection(app.current_event["queryStringParameters"]['file-name'])
     return d
 
 def get_triplet(block):
@@ -41,6 +37,15 @@ def get_printed_question(blocks, i):
 def get_handwritten_answer(blocks, i):
     return get_block_of_content(blocks, i, "HANDWRITING")
 
+
+def get_printed_question(blocks, i):
+    return get_block_of_content(blocks, i, "PRINTED")
+
+
+def get_handwritten_answer(blocks, i):
+    return get_block_of_content(blocks, i, "HANDWRITING")
+
+
 def process_text_detection(f_name):
     blocks = boto3.client('textract', region_name='us-east-1').detect_document_text(
         Document={'S3Object': {'Bucket': "kamilxbucket", 'Name': f_name}})['Blocks']
@@ -60,7 +65,5 @@ def process_text_detection(f_name):
 
 @logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
 @tracer.capture_lambda_handler
-@metrics.log_metrics(capture_cold_start_metric=True)
 def lambda_handler(event: dict, context: LambdaContext) -> dict:
-    logger.info(event)
     return app.resolve(event, context)
