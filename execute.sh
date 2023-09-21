@@ -6,5 +6,5 @@ do
 	out=`echo $file | awk -F "." '{print $1}'`
 	out="output/"$out".json"
 	echo "Processing $file and redirected to $out"
-	curl -XGET "https://tvzdzzak83.execute-api.us-east-1.amazonaws.com/dev/get-text?file-name=$file" |  python -m json.tool >> $out
+	curl -XGET "https://tvzdzzak83.execute-api.us-east-1.amazonaws.com/dev/get-text?file-name=$file" |  python -m json.tool > $out
 done
