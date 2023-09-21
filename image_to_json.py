@@ -55,35 +55,31 @@ def process_text_detection(f_name):
     residual = " "
     while i < len(blocks):
         b = get_triplet(blocks[i])
+        q_no, q, a = "", None, None
         if b[0] == "WORD" and b[1] == 'PRINTED':
             if b[2] == "-":
                 q, i = get_printed_question(blocks, i)
-                if q is None:
-                    break
                 a, i = get_handwritten_answer(blocks, i)
-                data_array.append({
-                    "question_no": "", "question": q, "answer": a
-                })
             elif b[2] == "Who" or b[2] == "Can" or b[2] == "What" or b[2] == "How" or b[2] == "what":
                 q, i = get_printed_question(blocks, i-1)
                 a, i = get_handwritten_answer(blocks, i)
-                data_array.append({
-                    "question_no": "", "question": residual + q, "answer": a
-                })
                 residual = ""
             elif b[2][0:len(b[2])-1].isdigit():
                 q_no = b[2][0:len(b[2])-1]
                 q, i = get_printed_question(blocks, i)
-                if i == -1:
-                    break
                 a, i = get_handwritten_answer(blocks, i)
-                if i == -1:
-                    break
+            else:
+                residual = residual + b[2] + " "
+            if q is not None and a is not None:
                 data_array.append({
                     "question_no": q_no, "question": q, "answer": a
                 })
-            else:
-                residual = residual + b[2] + " "
+            if q is not None and a is None:
+                data_array.append({
+                    "question_no": q_no, "question": q, "answer": ""
+                })
+            if i == -1:
+                break
 
         i = i + 1
     print(str(data_array))
