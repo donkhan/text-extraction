@@ -1,6 +1,6 @@
 # text-extraction
 
-Setup:
+# AWS Development Setup:
 
 Create a S3 Bucket. Upload your images to S3 Bucket. 
 https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html
@@ -9,10 +9,13 @@ Create a Lamda Function in AWS and copy paste the content from lambda_function_e
 https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html
 
 Edit the following key 'Bucket' to the your bucket name. In case you are running in different region, edit the region name also.
+ ```
  def process_text_detection(f_name):
     blocks = boto3.client('textract', region_name='us-east-1').detect_document_text(
         Document={'S3Object': {'Bucket': "kamilxbucket", 'Name': f_name}})['Blocks']
+```
 
+# Local Development Setup:
 Development Setup in case you need to modify and test in Local Machine:
 1. Clone this repository
 2. Install AWS SDK. Please follow the steps given here https://aws.amazon.com/sdk-for-python/
@@ -20,6 +23,7 @@ Development Setup in case you need to modify and test in Local Machine:
 4. Run the Standalone code.
     
 
+# Usage 
 
 This repository is a demonstration of lambda function which uses AWS-textract to extract the text content from images which are present in a known s3 repository and create json responses.
 
